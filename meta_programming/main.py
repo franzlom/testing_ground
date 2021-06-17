@@ -39,14 +39,31 @@ def meta_programming_magic():
     Car.magic_new_field = 'WHAT IS THIS MAGIC NEW FIELD CREATED WITHOUT BEING DEFINED'
     Car.method = lambda self: print('MAGIC METHOD FROM NOWHERE')
 
+
+
     print(new_car.magic_new_field)
     new_car.method()
     print(new_car)
 
-
+def meta_programming_magic2(mystr):
+    print(mystr)
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     # print_hi('PyCharm')
     # test_id(12)
-    meta_programming_magic()
+    # meta_programming_magic()
+
+    a = {
+
+    }
+    # a.asd = []
+    a['asd'] = []
+    a['face'] = {}
+    # a['myfunc'] = meta_programming_magic2
+    a['myfunc'] = lambda x: print(x)
+    print(a['asd'])
+    print(a)
+
+    a['myfunc']('hello from here')
+    a['myfunc']('boo')

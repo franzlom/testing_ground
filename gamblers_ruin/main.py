@@ -2,11 +2,11 @@
 
 from random import *
 
-starting_cash = 30  # our starting cash
+starting_cash = 10  # our starting cash
 goal_cash = 100  # we stop when we get this amount of money
 lost_state = 0  # we stop when we have no money
 cash_per_round = 5  # win or lose by this amount
-iteration = 100  # how many times do we want to play
+iteration = 1000  # how many times do we want to play
 
 
 def gamblers_ruin():
@@ -40,7 +40,16 @@ def flip_a_coin():
 
 
 def summary(lst: list):
-    return {i: lst.count(i) for i in lst}
+    summary = {i: lst.count(i) for i in lst}
+
+    winning_percentage = summary['won']/(summary['won'] + summary['lost'])
+    loosing_percentage = summary['lost']/(summary['won'] + summary['lost'])
+
+    print('_____SUMMARRY_____')
+    print(f'winning percentage = {winning_percentage*100}')
+    print(f'loosing percentage = {loosing_percentage*100}')
+
+    return summary
 
 
 def run(iteration):
