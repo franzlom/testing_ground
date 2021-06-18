@@ -5,8 +5,11 @@ motivation: I want to scrape chrono24 for prices of watch over time and see if I
 
 By Franz Lomibao
 """
+import asyncio
+import time
 import unicodedata
 
+import aiohttp
 import requests
 from bs4 import BeautifulSoup
 
@@ -47,7 +50,7 @@ def run_two():
         try:
             watch_image = watch.find('img')['srcset'].split(' ')[0]
         except KeyError:
-            watch_image = watch.find('img')['src'].split(' ')[0]
+            watch_image = watch.find('img')['data-srcset'].split(' ')[0]
 
         watch_description = watch.find('img')['alt']
         chrono_url = watch.find('a')['href']
@@ -61,14 +64,63 @@ def run_two():
         inner_dct['watch_description'] = watch_description
         inner_dct['chrono_url'] = f'{base_url}{chrono_url}'
 
-        print(inner_dct)
-
         output_lst.append(inner_dct)
 
     return output_lst
 
 
-if __name__ == '__main__':
-    watch_info = run_two()
+def scrape_site(html_lst):
+    for html in html_lst:
+        soup = BeautifulSoup(html, 'lxml')
+        description = soup.findAll('span', id_='watchNotes')  # this returns class bs4.element.Tag
 
-    print(watch_info)
+        description = description
+        print(description)
+
+        exit(-2)
+
+
+async def fetch(session, url):
+    async with session.get(url) as response:
+        assert response.status == 200
+        return await response.text()
+
+
+async def get_more_data(url_lst):
+    tasks = list()
+    # url_lst = [
+    #     'https://www.chrono24.co.nz/rolex/rolex-day-date-40--id19609982.htm',
+    #     'https://www.chrono24.co.nz/rolex/rolex-submariner-kermit--id19741628.htm'
+    # ]
+    async with aiohttp.ClientSession() as session:
+        for url in url_lst:
+            task = asyncio.ensure_future(fetch(session, url))
+            tasks.append(task)
+        responses = await asyncio.gather(*tasks)
+
+
+        print(f'len(responses) = {len(responses)}')
+        print(f'type(responses) = {type(responses)}')
+
+        scrape_site(responses)
+
+
+if __name__ == '__main__':
+    start_time = time.time()
+    # watch_info = run_two()
+    # # async_stuff
+    # loop = asyncio.get_event_loop()
+    # loop.run_until_complete(get_more_data())
+
+    search_response = run_two()
+    print(search_response)
+
+    watch_sites = [x['chrono_url'] for x in search_response]
+    print('watch_site =')
+    print(watch_sites)
+
+    loop = asyncio.get_event_loop()
+    future = asyncio.ensure_future(get_more_data(watch_sites))
+    loop.run_until_complete(future)
+
+    print("--- %s seconds ---" % (time.time() - start_time))
