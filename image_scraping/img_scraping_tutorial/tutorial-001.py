@@ -43,7 +43,6 @@ def run_two():
 
     for watch in watch_lst:
         inner_dct = dict()
-        # print(watch)
         watch_name = watch.find('div', class_='article-title').text.strip()
         watch_price = unicodedata.normalize('NFKD', watch.find('strong', class_=None).text).replace('\n', '')
         price_currency = watch_price.split('$')[0]

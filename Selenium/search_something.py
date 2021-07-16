@@ -11,24 +11,24 @@ def run():
     search_box = driver.find_element_by_name('q')
     search_box.clear()
     search_box.send_keys('python language')
-    # search_box.send_keys(Keys.RETURN)
+    search_box.send_keys(Keys.RETURN)
 
-    submit = driver.find_element()
+    # submit = driver.find_element()
+    #
+    # new_driver = driver.window_handles[1]
 
-    new_driver = driver.window_handles[1]
-
-    print(search_box)
+    print(driver.text)
 
     image_page = driver.find_elements_by_class_name('rg_i Q4LuWd')
     print(image_page)
-    for element in image_page:
-        print('in for loop')
-        element.click()
-        time.sleep(1)
-        e = driver.find_elements_by_class_name('v4dQwb')
+    # for element in image_page:
+    #     print('in for loop')
+    #     element.click()
+    #     time.sleep(1)
+    #     e = driver.find_elements_by_class_name('v4dQwb')
 
 
-    time.sleep(10)
+    # time.sleep(10)
     # driver.close()
 
 
